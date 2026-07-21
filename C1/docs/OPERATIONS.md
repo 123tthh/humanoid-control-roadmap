@@ -1,0 +1,280 @@
+# C1 启动与常用命令
+
+本章使用本机已经安装并验证的组件，不使用假设路径：
+
+- Isaac Sim 5.1.0 工作站版：`/home/gtk/isaac-sim-5.1`
+- Isaac Lab v2.3.0：`/home/gtk/UNITREE_DEPS/IsaacLab`
+- Unitree RL Lab：`/home/gtk/UNITREE_DEPS/unitree_rl_lab`
+- G1 模型：`/home/gtk/UNITREE_DEPS/unitree_model`
+- Miniconda 环境：`/home/gtk/miniconda3/envs/env_isaaclab`
+- ROS 2：Humble，`/opt/ros/humble`
+- 项目目录：`/home/gtk/UNITREE/C1`
+
+## 1. 环境检查
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh check
+./scripts/c1.sh list
+./scripts/c1.sh smoke
+```
+
+`check` 和 `smoke` 最后应显示 `RESULT: PASS`。
+
+## 2. 启动 Isaac Sim 工作站版
+
+不使用 ROS 时，在新终端执行：
+
+```bash
+cd /home/gtk/isaac-sim-5.1
+./isaac-sim.sh
+```
+
+打开应用选择器：
+
+```bash
+cd /home/gtk/isaac-sim-5.1
+./isaac-sim.selector.sh
+```
+
+## 3. 启动 Isaac Sim ROS 2 Bridge
+
+本机是 Ubuntu 22.04，Isaac Sim 5.1 在没有 source 外部 ROS 时会自动加载内置 Humble/Python 3.11 Bridge。
+
+终端 A 使用一个全新终端，不要先执行 `source /opt/ros/humble/setup.bash`：
+
+```bash
+unset ROS_DISTRO AMENT_PREFIX_PATH COLCON_PREFIX_PATH PYTHONPATH
+export ROS_DOMAIN_ID=0
+
+cd /home/gtk/isaac-sim-5.1
+./isaac-sim.sh
+```
+
+进入 Isaac Sim 后，可在 `Window > Extensions` 中确认 `isaacsim.ros2.bridge` 已启用。
+
+## 4. 启动本机外部 ROS 2 Humble 节点
+
+终端 B 使用本机真实安装路径：
+
+```bash
+source /opt/ros/humble/setup.bash
+export ROS_DOMAIN_ID=0
+
+ros2 topic list
+```
+
+当 Isaac Sim 场景发布仿真时钟后，可执行：
+
+```bash
+ros2 topic echo /clock
+```
+
+终端 A 与终端 B 的 `ROS_DOMAIN_ID` 必须一致。外部节点通过 DDS 与 Isaac Sim 通信，不要在终端 A source `/opt/ros/humble/setup.bash`，以免系统 Python 3.10 ROS 路径污染 Isaac Sim 的 Python 3.11 进程。
+
+## 5. 激活强化学习环境
+
+```bash
+cd /home/gtk/UNITREE/C1
+source scripts/env.sh
+```
+
+检查解释器：
+
+```bash
+which python
+python --version
+echo "${CONDA_DEFAULT_ENV}"
+```
+
+预期为 `env_isaaclab` 和 Python 3.11。`scripts/env.sh` 会主动隔离 ROS 路径，因此该终端只用于训练、回放和 Isaac Lab 调试。
+
+## 6. G1 训练
+
+最小验证：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh train --num_envs 16 --max_iterations 1
+```
+
+按 Unitree 默认配置正式训练：
+
+```bash
+./scripts/c1.sh train
+```
+
+默认配置是 4096 个并行环境、50000 次迭代，每个环境每次迭代采集 24 步，每 100 次迭代保存一次模型。训练日志保存在：
+
+```text
+/home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/
+```
+
+当前正式训练运行目录：
+
+```text
+/home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41
+```
+
+### 6.1 预计训练时间
+
+RTX 5090 上的实测稳定值为：
+
+- 4096 个并行环境
+- 每次迭代 98304 个仿真步
+- 每次迭代约 1.95–2.10 秒
+- 吞吐量约 48000–50000 steps/s
+- 完成 50000 次迭代预计约 27–30 小时
+- 总仿真步数约 49.15 亿
+
+RSL-RL 终端中的 ETA 采用 `HH:MM:SS` 显示，超过 24 小时会回绕。例如预热后显示 `ETA: 05:xx:xx`，实际可能是 1 天 5 小时，即约 29 小时。
+
+如果使用 `SIGSTOP` 暂停，恢复后的第一轮会把暂停的墙钟时间计入 `collection time`，后续 ETA 会被明显放大并失去参考价值；这不代表训练变慢。应继续以稳定状态下约 1.9–2.1 秒/轮估算剩余时长。
+
+4096 是 Unitree 官方任务配置的默认环境数。实测训练进程约占 8.7 GiB 显存，GPU 利用率约 82%。继续增加环境数会改变 PPO 批量大小和训练行为，因此本章保持官方 4096 配置，而不是只按显存容量盲目增加。
+
+### 6.2 查看训练输出
+
+查看训练进程：
+
+```bash
+pgrep -af 'unitree_rl_lab/scripts/rsl_rl/train.py'
+```
+
+查看进程运行时间和状态：
+
+```bash
+TRAIN_PID=$(pgrep -n -f 'unitree_rl_lab/scripts/rsl_rl/[t]rain.py')
+ps -p "${TRAIN_PID}" -o pid,etime,%cpu,%mem,stat,args
+```
+
+查看 GPU：
+
+```bash
+nvidia-smi
+```
+
+查看当前运行已经保存的模型：
+
+```bash
+find /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41 \
+  -maxdepth 1 -name 'model_*.pt' -printf '%f %s bytes\n' | sort -V
+```
+
+查看 TensorBoard 曲线：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh tensorboard --port 6006
+```
+
+浏览器打开 `http://127.0.0.1:6006`。
+
+### 6.3 短时间暂停与继续
+
+进程级暂停会保留内存、显存和当前迭代状态，适合短时间暂停：
+
+```bash
+TRAIN_PID=$(pgrep -n -f 'unitree_rl_lab/scripts/rsl_rl/[t]rain.py')
+kill -STOP "${TRAIN_PID}"
+```
+
+检查状态；`STAT` 中出现 `T` 表示已暂停：
+
+```bash
+ps -p "${TRAIN_PID}" -o pid,etime,stat,args
+```
+
+继续训练：
+
+```bash
+kill -CONT "${TRAIN_PID}"
+```
+
+这种暂停不会释放 GPU 显存。若要长时间停止或给其他任务释放 GPU，应使用 checkpoint 续训方式。
+
+### 6.4 安全停止并从 checkpoint 继续
+
+默认每 100 次迭代保存一次 checkpoint。先确认最新文件已经生成：
+
+```bash
+find /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41 \
+  -maxdepth 1 -name 'model_*.pt' -printf '%f\n' | sort -V
+```
+
+然后向训练进程发送正常中断：
+
+```bash
+TRAIN_PID=$(pgrep -n -f 'unitree_rl_lab/scripts/rsl_rl/[t]rain.py')
+kill -INT "${TRAIN_PID}"
+```
+
+中断时不会额外保存当前未满 100 轮的进度，因此应先记住最新的 `model_N.pt`。例如从 `model_100.pt` 继续，并完成剩余 49900 次迭代：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh train \
+  --resume \
+  --load_run 2026-07-20_10-39-41 \
+  --checkpoint model_100.pt \
+  --max_iterations 49900
+```
+
+`--max_iterations` 在续训时表示“本次再训练多少次”，不是最终迭代编号。恢复后会创建新的日志运行目录，但模型参数、优化器状态和 checkpoint 中的迭代编号会恢复。
+
+如果不写 `--checkpoint`，RSL-RL 会在指定的 `--load_run` 中自动选择编号最大的 `model_*.pt`：
+
+```bash
+./scripts/c1.sh train \
+  --resume \
+  --load_run 2026-07-20_10-39-41 \
+  --max_iterations 49900
+```
+
+## 7. 回放
+
+自动选择训练记录：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh play
+```
+
+指定 checkpoint：
+
+```bash
+./scripts/c1.sh play --checkpoint /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/<运行目录>/model_*.pt
+```
+
+## 8. TensorBoard
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh tensorboard --port 6006
+```
+
+浏览器访问 `http://127.0.0.1:6006`，停止服务按 `Ctrl+C`。
+
+## 9. 推荐启动顺序
+
+训练：
+
+1. `./scripts/c1.sh check`
+2. `./scripts/c1.sh train`
+3. 另开终端运行 `./scripts/c1.sh tensorboard`
+
+Isaac Sim + ROS 2 Humble：
+
+1. 终端 A 不 source 系统 ROS，直接启动 Isaac Sim 工作站版。
+2. 在 Isaac Sim 中确认 ROS 2 Bridge 已启用并打开场景。
+3. 终端 B 执行 `source /opt/ros/humble/setup.bash`。
+4. 使用相同的 `ROS_DOMAIN_ID=0`。
+5. 用 `ros2 topic list` 和 `ros2 topic echo /clock` 验证通信。
+
+## 文档依据
+
+- `/home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_workstation.md`
+- `/home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_ros.md`
+- `/home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/python_scripting/manual_standalone_python.md`
+- `/home/gtk/UNITREE_DEPS/IsaacLab/docs/source/setup/installation/binaries_installation.rst`
+- `/home/gtk/UNITREE/C1/docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf`

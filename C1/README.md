@@ -69,9 +69,9 @@ source scripts/env.sh
 - PDF 的 TensorBoard 示例把 `latest.pt` 当作日志目录。当前代码实际写入 `logs/rsl_rl/<run>/`，TensorBoard 应指向 `logs/rsl_rl/`。
 - 本机实际安装的是 ROS 2 Humble（`/opt/ros/humble`）。Isaac Sim 5.1 在 Ubuntu 22.04 上默认加载内置的 Humble/Python 3.11 Bridge；外部 Humble 节点在另一个终端使用系统安装，避免 Python 3.10 路径进入 Isaac Sim 进程。
 
-详细检查结果见 [ENVIRONMENT_REPORT.md](ENVIRONMENT_REPORT.md)。
+详细检查结果见 [ENVIRONMENT.md](docs/ENVIRONMENT.md)。
 
-工作站图形界面、Humble ROS 2 Bridge、训练、回放与 TensorBoard 的完整命令见 [启动与常用命令.md](启动与常用命令.md)。
+工作站图形界面、Humble ROS 2 Bridge、训练、回放与 TensorBoard 的完整命令见 [OPERATIONS.md](docs/OPERATIONS.md)。
 
 ## 文档依据
 
@@ -81,4 +81,4 @@ source scripts/env.sh
 - `/home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/python_scripting/manual_standalone_python.md`
 - `/home/gtk/ai_docs/docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debs.md`
 - `/home/gtk/UNITREE_DEPS/IsaacLab/docs/source/setup/installation/binaries_installation.rst`
-- `实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf`
+- `docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf`

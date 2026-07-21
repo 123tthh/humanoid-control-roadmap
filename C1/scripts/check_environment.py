@@ -2,7 +2,7 @@
 # - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/requirements.md
 # - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_workstation.md
 # - /home/gtk/ai_docs/docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debs.md
-# Practice reference: /home/gtk/UNITREE/C1/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf
+# Practice reference: /home/gtk/UNITREE/C1/docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf
 
 """Check the isolated C1 Isaac Sim / Isaac Lab / Unitree environment."""
 

@@ -1,0 +1,203 @@
+# C1 新对话交接说明
+
+更新时间：2026-07-21 15:00 左右，Asia/Shanghai。
+
+## 目标边界
+
+本项目是 `/home/gtk/UNITREE/C1`，对应第一章 C1：宇树 G1 仿真环境搭建、基础验证、训练与回放。
+
+必须保持隔离：
+
+- 不修改 `/home/gtk/tianji_netwon_ws/external/IsaacLab`。
+- 不修改其他项目依赖的 Isaac Lab / Conda 环境。
+- C1 的外部依赖放在 `/home/gtk/UNITREE_DEPS`。
+- GPU 驱动在宿主机外部，不在 sandbox 内安装或改动。
+- 对训练进程做暂停/继续时，只能操作确认后的 Unitree G1 训练 PID，不杀死其他进程。
+
+## 当前已构建环境
+
+| 组件 | 实际位置 / 版本 |
+| --- | --- |
+| Isaac Sim | `/home/gtk/isaac-sim-5.1`，5.1.0 |
+| Isaac Lab | `/home/gtk/UNITREE_DEPS/IsaacLab`，v2.3.0 |
+| Unitree RL Lab | `/home/gtk/UNITREE_DEPS/unitree_rl_lab`，0.2.1 |
+| Unitree model | `/home/gtk/UNITREE_DEPS/unitree_model` |
+| Conda env | `/home/gtk/miniconda3/envs/env_isaaclab`，Python 3.11 |
+| ROS 2 | 本机实际安装 `/opt/ros/humble`，不是假设 Jazzy |
+| GPU | NVIDIA GeForce RTX 5090 D v2，24GB |
+
+本机实际 ROS 版本以 `/opt/ros/humble` 为准。不要把截图中的 Jazzy 假设路径写成事实。
+
+## 文档与溯源要求
+
+若继续写 Python 脚本或 C++ 头文件，文件顶部必须注释参考的本地文档路径。
+
+优先参考：
+
+- `/home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0`
+- `/home/gtk/ai_docs/docs.ros.org`
+- `/home/gtk/UNITREE/C1/docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf`
+- `/home/gtk/UNITREE_DEPS/IsaacLab/docs`
+
+不要猜 Isaac Sim、Isaac Lab、ROS 2 API 签名。
+
+## 项目入口
+
+工作目录：
+
+```bash
+cd /home/gtk/UNITREE/C1
+```
+
+环境入口：
+
+```bash
+source scripts/env.sh
+```
+
+统一命令入口：
+
+```bash
+./scripts/c1.sh help
+```
+
+已有命令：
+
+```bash
+./scripts/c1.sh check
+./scripts/c1.sh list
+./scripts/c1.sh smoke
+./scripts/c1.sh train
+./scripts/c1.sh play
+./scripts/c1.sh tensorboard
+```
+
+已实测：
+
+- `check` 通过。
+- `list` 能列出 Unitree 任务。
+- `smoke` 完成 5 个 headless Isaac Sim / Isaac Lab physics steps。
+- `train --num_envs 16 --max_iterations 1` 通过。
+- 正式 `./scripts/c1.sh train` 已成功加载 G1 模型并训练到 checkpoint。
+
+## 当前训练状态
+
+最新核查时，原训练 PID `2847020` 已不存在，GPU 上也没有该 Unitree G1 训练进程。
+
+因此用户要求“临时暂停训练”时，实际没有可暂停对象；不要再对旧 PID `2847020` 发送信号。
+
+当前最新 checkpoint：
+
+```text
+/home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41/model_35700.pt
+```
+
+该 run 原目标默认是 `50000` iterations，当前 checkpoint 到 `35700`。若要补到 50000，剩余约 `14300` iterations。
+
+## 只读状态检查接口
+
+查是否仍有 Unitree G1 训练进程：
+
+```bash
+ps -eo pid,stat,etime,%cpu,%mem,args | rg 'unitree_rl_lab/scripts/rsl_rl/train.py|Unitree-G1-29dof-Velocity'
+```
+
+查 GPU 进程：
+
+```bash
+nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits
+```
+
+查 GPU 总状态：
+
+```bash
+nvidia-smi --query-gpu=timestamp,name,utilization.gpu,utilization.memory,memory.used,memory.free,power.draw,pstate --format=csv,noheader,nounits
+```
+
+查最新 checkpoint：
+
+```bash
+find /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41 \
+  -maxdepth 1 -name 'model_*.pt' \
+  -printf '%f %TY-%Tm-%Td %TH:%TM:%TS %s\n' | sort -V | tail
+```
+
+## 恢复训练接口
+
+从当前最新 checkpoint 继续，并补完到 50000 的剩余约 14300 次迭代：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh train \
+  --resume \
+  --load_run 2026-07-20_10-39-41 \
+  --checkpoint model_35700.pt \
+  --max_iterations 14300
+```
+
+注意：RSL-RL 这里的 `--max_iterations` 在续训时表示“本次再训练多少次”，不是最终总编号。
+
+如果只想自动加载该 run 下编号最大的 checkpoint：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh train \
+  --resume \
+  --load_run 2026-07-20_10-39-41 \
+  --max_iterations 14300
+```
+
+## 临时暂停 / 继续接口
+
+先查训练 PID，确认命令行确实是 Unitree G1 训练：
+
+```bash
+ps -eo pid,stat,etime,args | rg 'unitree_rl_lab/scripts/rsl_rl/train.py|Unitree-G1-29dof-Velocity'
+```
+
+临时暂停：
+
+```bash
+kill -STOP <TRAIN_PID>
+```
+
+继续：
+
+```bash
+kill -CONT <TRAIN_PID>
+```
+
+确认暂停状态：
+
+```bash
+ps -p <TRAIN_PID> -o pid,etime,%cpu,%mem,stat,args
+```
+
+`STAT` 中包含 `T` 表示进程已被 `SIGSTOP` 暂停。`SIGSTOP` 不释放显存，只适合短暂停顿。长时间让出 GPU 时，应依赖 checkpoint 停止后再续训。
+
+## 回放与 TensorBoard
+
+TensorBoard：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh tensorboard
+```
+
+回放指定 checkpoint：
+
+```bash
+cd /home/gtk/UNITREE/C1
+./scripts/c1.sh play \
+  --checkpoint /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-20_10-39-41/model_35700.pt
+```
+
+## 关键文件
+
+- `/home/gtk/UNITREE/C1/README.md`
+- `/home/gtk/UNITREE/C1/docs/ENVIRONMENT.md`
+- `/home/gtk/UNITREE/C1/docs/OPERATIONS.md`
+- `/home/gtk/UNITREE/C1/scripts/env.sh`
+- `/home/gtk/UNITREE/C1/scripts/c1.sh`
+- `/home/gtk/UNITREE/C1/scripts/check_environment.py`
+- `/home/gtk/UNITREE/C1/scripts/validate_isaac_sim.py`
