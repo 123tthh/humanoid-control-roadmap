@@ -1,10 +1,10 @@
 # C5 分层导航：课程资源与环境接口
 
-参考：`实践5：基于分层强化学习的人形机器人导航.pdf`。
+参考：`course-materials/实践5：基于分层强化学习的人形机器人导航.pdf`。
 
 C5 复用 `/home/gtk/isaac-sim-5.1`、现有 `env_isaaclab`、以及只读的 `/home/gtk/UNITREE_DEPS/IsaacLab` 和 `unitree_rl_lab`。它不安装新 Isaac Lab，也不改变 C1 训练。
 
-完整课程包已经位于 `C5/unitree_rl_lab_student/unitree_rl_lab/`，其导航源码、7 个 TODO、原始入口、配置和低层策略均保持课程原样。预检：
+完整课程包已经整理到 `C5/`，其导航源码、7 个 TODO、原始入口、配置和低层策略均保持课程原样。预检：
 
 ```bash
 cd /home/gtk/UNITREE/C5

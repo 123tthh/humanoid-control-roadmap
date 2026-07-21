@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation references:
-# - /home/gtk/UNITREE/C3/实践3：人形机器人动作空间 HoST Sim2Sim 部署.pdf
+# - /home/gtk/UNITREE/C3/docs/course-materials/实践3：人形机器人动作空间 HoST Sim2Sim 部署.pdf
 
 set -eo pipefail
 C3_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

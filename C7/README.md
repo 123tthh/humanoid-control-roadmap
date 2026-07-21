@@ -10,7 +10,7 @@ cd /home/gtk/UNITREE/C7
 ./scripts/c7.sh models
 ```
 
-`models` 在三个 SMPL-X `.pkl` 文件放入 `GMR/assets/body_models/smplx/` 后通过。
+`models` 在三个 SMPL-X `.pkl` 文件放入 `gmr/assets/body_models/smplx/` 后通过。
 
 ## 后续显式环境安装
 

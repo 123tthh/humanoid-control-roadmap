@@ -1,8 +1,8 @@
 # C2：粗糙地形感知与动作空间
 
-参考：`/home/gtk/UNITREE/C2/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf`。
+参考：`docs/course-materials/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf`。
 
-本章实现采用 `C2/source/c2_rough_terrain` 的隔离注册任务 `Unitree-G1-29dof-Velocity-Rough`：保留 Unitree G1 29-DOF 的关节位置动作接口，在原有本体感知上添加 187 点 `height_scanner`，并替换为 Isaac Lab 的 `ROUGH_TERRAINS_CFG`。policy 与 critic 单帧观测均为 283 维，保留 5 帧历史时 policy 输入为 1415 维。不会修改 `/home/gtk/UNITREE_DEPS/unitree_rl_lab`。
+本章实现采用 `src/c2_rough_terrain` 的隔离注册任务 `Unitree-G1-29dof-Velocity-Rough`：保留 Unitree G1 29-DOF 的关节位置动作接口，在原有本体感知上添加 187 点 `height_scanner`，并替换为 Isaac Lab 的 `ROUGH_TERRAINS_CFG`。policy 与 critic 单帧观测均为 283 维，保留 5 帧历史时 policy 输入为 1415 维。不会修改 `/home/gtk/UNITREE_DEPS/unitree_rl_lab`。
 
 ```bash
 cd /home/gtk/UNITREE/C2

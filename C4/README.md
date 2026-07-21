@@ -1,10 +1,10 @@
 # C4：蹲姿行走策略框架
 
-本章使用课程提供的 **mjlab + NVIDIA Warp + MuJoCo + Viser** 工程，不使用或修改 C1/C2 的 Isaac Lab。工程入口为 `scripts/c4.sh`，资源契约见 [资源清单.md](资源清单.md)。
+本章使用课程提供的 **mjlab + NVIDIA Warp + MuJoCo + Viser** 工程，不使用或修改 C1/C2 的 Isaac Lab。工程入口为 `scripts/c4.sh`，资源契约见 [RESOURCES.md](docs/RESOURCES.md)。
 
 ## 已固定的接口
 
-- 项目根目录：`/home/gtk/UNITREE/C4/HW4_蹲姿行走作业/mjlab`（可用 `UNITREE_C4_PROJECT_DIR` 覆盖）。
+- 项目根目录：`/home/gtk/UNITREE/C4`（可用 `UNITREE_C4_PROJECT_DIR` 覆盖）。
 - 验证任务：`Mjlab-VelocityHeight-Flat-Unitree-G1`。
 - 基线任务：`Mjlab-Velocity-Flat-Unitree-G1`。
 - 测试：`PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run python -m pytest tests/test_velocity_task.py -q`。

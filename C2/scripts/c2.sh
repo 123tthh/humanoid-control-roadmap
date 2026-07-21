@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation references:
-# - /home/gtk/UNITREE/C2/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf
+# - /home/gtk/UNITREE/C2/docs/course-materials/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf
 
 set -eo pipefail
 C2_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

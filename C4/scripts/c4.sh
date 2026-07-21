@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation reference:
-# - /home/gtk/UNITREE/C4/实践4：蹲姿行走策略，G1速度+骨盆高度MDP设计.pdf
+# - /home/gtk/UNITREE/C4/docs/course-materials/实践4：蹲姿行走策略，G1速度+骨盆高度MDP设计.pdf
 
 set -eo pipefail
 C4_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -12,7 +12,7 @@ require_project() {
     command -v uv >/dev/null || { echo 'Missing uv. Install uv, then rerun.' >&2; return 1; }
     test -f "${UNITREE_C4_PROJECT_DIR}/pyproject.toml" || {
         echo "Missing C4 course project: ${UNITREE_C4_PROJECT_DIR}/pyproject.toml" >&2
-        echo 'Extract HW4_蹲姿行走作业.zip into C4/project first.' >&2
+        echo 'C4 root must contain the supplied mjlab pyproject.toml.' >&2
         return 1
     }
 }

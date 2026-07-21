@@ -1,0 +1,22 @@
+# C6 教师—学生蒸馏：课程资源与环境接口
+
+参考：`course-materials/实践6：基于教师-学生蒸馏的全身运动跟踪.pdf`。
+
+PDF 对应的 `shenlan_humanoid_hw6` 工程已经整理到 `C6/`。它含 `pyproject.toml`、`uv.lock`、教师检查点、动作数据、`src/humanoid_hw6/` 及 TODO，结构为：
+
+```
+C6/pyproject.toml
+C6/uv.lock
+C6/checkpoints/
+C6/src/humanoid_hw6/
+```
+
+随后可只做环境与资源预检：
+
+```bash
+cd /home/gtk/UNITREE/C6
+./scripts/c6.sh preflight
+./scripts/c6.sh setup
+```
+
+`setup` 将由课程锁文件建立 C6 私有 `.venv`，不复用 C1 Conda 环境，也不会自动运行教师或学生训练。若移动课程包，可用 `UNITREE_C6_PROJECT_DIR` 覆盖默认位置。

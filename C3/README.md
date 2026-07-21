@@ -1,8 +1,8 @@
 # C3：HoST Sim2Sim 部署
 
-参考：`/home/gtk/UNITREE/C3/实践3：人形机器人动作空间 HoST Sim2Sim 部署.pdf`。
+参考：`docs/course-materials/实践3：人形机器人动作空间 HoST Sim2Sim 部署.pdf`。
 
-C3 使用 `/home/gtk/UNITREE/.conda/envs/unitree_mujoco`，与 C1 的 `env_isaaclab` 分离。作业要求的资源尚未在本机找到；请将 `shenlan_hw2_action_space.zip` 解压到本目录，使下列文件存在：
+C3 使用 `/home/gtk/UNITREE/.conda/envs/unitree_mujoco`，与 C1 的 `env_isaaclab` 分离。课程资源已经整理到本章根目录：
 
 ```text
 deploy_mujoco_host_student.py

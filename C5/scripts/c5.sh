@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation reference:
-# - /home/gtk/UNITREE/C5/实践5：基于分层强化学习的人形机器人导航.pdf
+# - /home/gtk/UNITREE/C5/docs/course-materials/实践5：基于分层强化学习的人形机器人导航.pdf
 
 set -eo pipefail
 C5_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

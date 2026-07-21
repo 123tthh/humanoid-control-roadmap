@@ -59,9 +59,9 @@ _build
 **/wandb/*
 **/outputs/*
 
-# Keep packaged pretrained policies for hierarchical RL homework
-!pretrained/
-!pretrained/**
+# Large pretrained policy binaries are local runtime resources.
+pretrained/**/*.pt
+pretrained/**/*.onnx
 
 # Teleop Recorded Dataset
 datasets

@@ -1,13 +1,13 @@
 # C7：GMR 人体动作到 G1 重定向
 
-参考：`实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf`。
+参考：`course-materials/实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf`。
 
 已发现并固定的真实资源：
 
 ```
-C7/GMR/                                            # 官方 GMR 源码
-C7/GMR/general_motion_retargeting/ik_configs/smplx_to_g1.json
-C7/深蓝学院-人形运控-Project7-code(1)/
+C7/gmr/                                            # 官方 GMR 源码
+C7/gmr/general_motion_retargeting/ik_configs/smplx_to_g1.json
+C7/resources/course_files/
   B12_-_walk_turn_right_(90)_stageii.npz           # ACCAD SMPL-X 示例
   vis_robot_motion_npz.py                          # 课程提供的可视化补充
 ```
@@ -16,7 +16,7 @@ GMR 与 C1/C3 彻底隔离：`scripts/c7.sh setup` 只创建
 `/home/gtk/UNITREE/.conda/envs/gmr310`（Python 3.10）并按 PDF 固定
 `numpy==1.26.4`、`scipy==1.15.3`。它不启动训练。
 
-已创建 SMPL-X 标准目录：`C7/GMR/assets/body_models/smplx/`。请通过
+已创建 SMPL-X 标准目录：`C7/gmr/assets/body_models/smplx/`。请通过
 [SMPL-X 官方下载页](https://smpl-x.is.tue.mpg.de/)注册并接受许可后，下载 SMPL-X
 模型包，将以下三个文件放入该目录：
 
@@ -29,7 +29,7 @@ SMPLX_MALE.pkl
 GMR 官方仓库同样要求从该项目站点下载模型；不应使用来源或许可不明的第三方镜像。放入后可执行：
 
 ```bash
-find /home/gtk/UNITREE/C7/GMR/assets/body_models/smplx \
+find /home/gtk/UNITREE/C7/gmr/assets/body_models/smplx \
   -maxdepth 1 -type f -name 'SMPLX_*.pkl' -printf '%f %s bytes\\n'
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation reference:
-# - /home/gtk/UNITREE/C6/实践6：基于教师-学生蒸馏的全身运动跟踪.pdf
+# - /home/gtk/UNITREE/C6/docs/course-materials/实践6：基于教师-学生蒸馏的全身运动跟踪.pdf
 
 set -eo pipefail
 C6_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -12,7 +12,7 @@ require_project() {
     command -v uv >/dev/null || { echo 'Missing uv. Install uv, then rerun.' >&2; return 1; }
     test -f "${UNITREE_C6_PROJECT_DIR}/pyproject.toml" || {
         echo "Missing C6 course project: ${UNITREE_C6_PROJECT_DIR}/pyproject.toml" >&2
-        echo 'Extract the C6 teacher-student course archive into C6/project first.' >&2
+        echo 'C6 root must contain the supplied teacher-student pyproject.toml.' >&2
         return 1
     }
 }

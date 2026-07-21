@@ -222,6 +222,12 @@ __marimo__/
 *.pth
 *.onnx
 *.tfevents.*
+C7/gmr/assets/
+C7/resources/course_files/*.npz
+*.pt
+*.pth
+*.onnx
+*.tfevents.*
 
 # GMR assets and supplied motion samples are fetched/provided separately.
 C7/GMR/assets/

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Local documentation references:
-# - /home/gtk/UNITREE/C7/实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf
-# - /home/gtk/UNITREE/C7/GMR/scripts/smplx_to_robot.py
+# - /home/gtk/UNITREE/C7/docs/course-materials/实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf
+# - /home/gtk/UNITREE/C7/gmr/scripts/smplx_to_robot.py
 """Validate the safe AMP motion-data contract described in the C7 PDF."""
 
 from __future__ import annotations

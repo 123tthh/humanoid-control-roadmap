@@ -6,7 +6,7 @@
 
 ```
 C5/
-  unitree_rl_lab_student/unitree_rl_lab/ # 已解压的完整课程包（不纳入共享依赖）
+  source/unitree_rl_lab/ # 已解压的完整课程包源码（不纳入共享依赖）
   scripts/       # 本章隔离入口
   资源清单.md
 ```

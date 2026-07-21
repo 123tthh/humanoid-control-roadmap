@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local documentation reference:
-# - /home/gtk/UNITREE/C7/实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf
+# - /home/gtk/UNITREE/C7/docs/course-materials/实践7：使用 GMR 完成人体动作到 G1 的运动重定向.pdf
 
 set -eo pipefail
 C7_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
