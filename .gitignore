@@ -214,5 +214,18 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+# UNITREE course handouts and generated training artifacts.
+*.pdf
+**/logs/
+**/outputs/
+*.pt
+*.pth
+*.onnx
+*.tfevents.*
+
+# GMR assets and supplied motion samples are fetched/provided separately.
+C7/GMR/assets/
+C7/深蓝学院-人形运控-Project7-code(1)/*.npz
+
 # Streamlit
 .streamlit/secrets.toml
