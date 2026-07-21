@@ -227,5 +227,9 @@ __marimo__/
 C7/GMR/assets/
 C7/深蓝学院-人形运控-Project7-code(1)/*.npz
 
+# Optional pretrained checkpoints supplied with the C5 course package.
+C5/unitree_rl_lab_student/unitree_rl_lab/pretrained/g1_29dof_lowlevel/policy.pt
+C5/unitree_rl_lab_student/unitree_rl_lab/pretrained/g1_29dof_lowlevel/policy.onnx
+
 # Streamlit
 .streamlit/secrets.toml
