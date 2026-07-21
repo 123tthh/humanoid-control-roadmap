@@ -1,0 +1,18 @@
+# Reference documents:
+# - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_container.md
+# - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/manual_livestream_clients.md
+#
+# Build this second image after Dockerfile.headless-training. It adds no remote
+# desktop server: use either local X11 with /isaac-sim/runapp.sh or Isaac Sim's
+# official WebRTC service with /isaac-sim/runheadless.sh.
+
+ARG BASE_IMAGE=unitree-isaacsim-headless:5.1.0
+FROM ${BASE_IMAGE}
+
+ENV ISAACSIM_PATH=/isaac-sim \
+    ISAACSIM_PYTHON_EXE=/isaac-sim/python.sh \
+    ISAACLAB_PATH=/opt/IsaacLab \
+    UNITREE_RL_LAB_PATH=/opt/unitree_rl_lab
+
+WORKDIR /workspace
+CMD ["bash"]

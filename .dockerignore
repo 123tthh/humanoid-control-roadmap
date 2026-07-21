@@ -1,0 +1,20 @@
+# The container image clones its pinned public dependencies and mounts this
+# repository at runtime.  Never send local runtime state or licensed assets to
+# the Docker daemon during image build.
+.git/
+.conda/
+**/__pycache__/
+**/.cache/
+**/.venv/
+**/logs/
+**/outputs/
+**/pretrained/
+**/policies/
+**/checkpoints/
+C7/gmr/assets/
+**/*.pdf
+**/*.pt
+**/*.pth
+**/*.onnx
+**/*.npz
+**/*.tfevents.*

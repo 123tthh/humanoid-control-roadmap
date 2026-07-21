@@ -1,0 +1,36 @@
+# Reference documents:
+# - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_container.md
+# - /home/gtk/UNITREE_DEPS/IsaacLab/docs/source/setup/installation/binaries_installation.rst
+#
+# Remote-training image: no X11, desktop, VNC, or WebRTC service is configured.
+# Build only after authenticating to NVIDIA NGC. The proprietary Isaac Sim
+# runtime is inherited from NVIDIA's official 5.1.0 image; it is not copied
+# into this repository or redistributed by this Dockerfile.
+
+ARG ISAACSIM_IMAGE=nvcr.io/nvidia/isaac-sim:5.1.0
+FROM ${ISAACSIM_IMAGE}
+
+USER root
+
+ARG ISAACLAB_REF=v2.3.0
+ARG UNITREE_RL_LAB_REF=4960b84732b0c2ec593dccbfe963fda1bcd7b1e3
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git git-lfs \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --branch "${ISAACLAB_REF}" --depth 1 https://github.com/isaac-sim/IsaacLab.git /opt/IsaacLab \
+    && git clone https://github.com/unitreerobotics/unitree_rl_lab.git /opt/unitree_rl_lab \
+    && git -C /opt/unitree_rl_lab checkout "${UNITREE_RL_LAB_REF}" \
+    && ln -s /isaac-sim /opt/IsaacLab/_isaac_sim
+
+ENV ISAACSIM_PATH=/isaac-sim \
+    ISAACSIM_PYTHON_EXE=/isaac-sim/python.sh \
+    ISAACLAB_PATH=/opt/IsaacLab \
+    UNITREE_RL_LAB_PATH=/opt/unitree_rl_lab
+
+WORKDIR /workspace
+
+# Install Isaac Lab extensions after starting the container so the environment
+# can be kept in a named Docker volume or rebuilt explicitly.
+CMD ["bash"]
