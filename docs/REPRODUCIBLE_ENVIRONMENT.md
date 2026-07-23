@@ -5,6 +5,9 @@ simulator binaries, GPU drivers, course handouts, checkpoints, or licensed
 SMPL-X assets. It is deliberately separate from the chapter code so a new
 machine can rebuild the external dependencies under its own `UNITREE_DEPS/`.
 
+The exact shared-directory tree, download links, local build products, and
+metadata-backup policy are recorded in [DEPENDENCY_TREE.md](DEPENDENCY_TREE.md).
+
 ## Locked baseline
 
 | Component | Required version or revision | Source |
