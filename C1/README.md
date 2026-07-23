@@ -14,6 +14,20 @@
 
 `/home/gtk/tianji_netwon_ws/external/IsaacLab`、`newton312` 和其他已有项目均未修改。C1 目录仅保存第一章资料、验证入口及后续训练输出。
 
+## 章节结构
+
+与 C2--C7 一致，C1 只保存本章可复用的接口、文档与必要结果；共享软件和大型运行产物不复制进项目：
+
+| 路径 | 内容 |
+| --- | --- |
+| `docs/course-materials/` | 课程课件（本地保留，不提交） |
+| `docs/` | 环境、操作、交接与结构说明 |
+| `scripts/` | C1 环境检查、训练、回放与 TensorBoard 入口 |
+| `resources/` | 指向共享 Isaac Sim / Isaac Lab / Unitree 依赖的资源接口说明 |
+| `logs/` | 本地训练日志；仅提交 `model_39300.pt` 与最终 `model_49999.pt` |
+
+共享依赖的绝对路径和复用边界见 [resources/README.md](resources/README.md)。
+
 ## 快速验证
 
 从本目录执行：
@@ -61,6 +75,14 @@ source scripts/env.sh
 
 ```bash
 ./scripts/c1.sh play --checkpoint /absolute/path/to/model_*.pt
+```
+
+本章最终完成的策略为：
+
+```bash
+./scripts/c1.sh play --checkpoint \
+  /home/gtk/UNITREE/C1/logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-21_16-15-36/model_49999.pt \
+  --num_envs 1
 ```
 
 ## 与实践 PDF 的差异

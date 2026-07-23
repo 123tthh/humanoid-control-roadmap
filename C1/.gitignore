@@ -2,6 +2,9 @@ __pycache__/
 *.py[cod]
 *.log
 .pytest_cache/
+# Editor/agent session metadata belongs to the local workspace, never a chapter.
+.agents/
+.codex/
+.git/
 logs/
 outputs/
-
