@@ -85,6 +85,25 @@ source scripts/env.sh
   --num_envs 1
 ```
 
+## MuJoCo Sim2Sim
+
+课件 4.4 的 G1-29dof Sim2Sim 入口已独立放在 `sim2sim/`。首次导出和准备
+控制器后，在两个终端分别运行：
+
+```bash
+./scripts/sim2sim.sh export
+./scripts/sim2sim.sh prepare
+./scripts/sim2sim.sh simulator
+```
+
+```bash
+./scripts/sim2sim.sh controller
+```
+
+随后按课件操作：`L2 + Up` 进入站立、在 MuJoCo 窗口按 `8` 放低弹力带、
+`R1 + X` 启动策略，按 `9` 切换弹力带。完整依赖、构建状态与故障边界见
+[SIM2SIM_MUJOCO.md](docs/SIM2SIM_MUJOCO.md)。
+
 ## 与实践 PDF 的差异
 
 - PDF 前置要求写 Isaac Lab 2.2.0，但当前 Unitree RL Lab 官方 README 明确声明 Isaac Sim 5.1.0 + Isaac Lab 2.3.0；Isaac Lab v2.3.0 的官方发布说明也明确其基于 Isaac Sim 5.1。因此本环境固定为 2.3.0。

@@ -1,0 +1,30 @@
+# Local documentation references:
+# - /home/gtk/UNITREE/C1/docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf
+# - /home/gtk/UNITREE_DEPS/unitree_rl_lab/deploy/robots/g1_29dof/config/config.yaml
+#
+# This controller-local copy keeps the C1 final policy path out of the shared
+# Unitree RL Lab checkout.  It is read by sim2sim/bin/g1_ctrl.
+FSM:
+  _:
+    Passive: {id: 1}
+    FixStand: {id: 2}
+    Velocity: {id: 3, type: RLBase}
+  Passive:
+    transitions:
+      FixStand: LT + up.on_pressed
+    mode: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    kd: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+  FixStand:
+    transitions:
+      Passive: LT + B.on_pressed
+      Velocity: RB + X.on_pressed
+    kp: [100, 100, 100, 150, 40, 40, 100, 100, 100, 150, 40, 40, 200, 200, 200, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+    kd: [2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 5, 5, 5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    ts: [0, 3]
+    qs:
+      - []
+      - [-0.1, 0, 0, 0.3, -0.2, 0, -0.1, 0, 0, 0.3, -0.2, 0, 0, 0, 0, 0, 0.25, 0, 0.97, 0.15, 0, 0, 0, -0.25, 0, 0.97, -0.15, 0, 0]
+  Velocity:
+    transitions:
+      Passive: LT + B.on_pressed
+    policy_dir: ../logs/rsl_rl/unitree_g1_29dof_velocity/2026-07-21_16-15-36

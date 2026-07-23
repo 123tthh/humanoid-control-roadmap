@@ -8,6 +8,7 @@ C1/
 ├── logs/                 # Local RSL-RL runs; two selected checkpoints are versioned
 ├── resources/            # Pointers to shared, version-locked dependencies
 ├── scripts/              # Check, train, play, and TensorBoard commands
+├── sim2sim/              # MuJoCo G1 configuration and controller launch interface
 └── README.md             # Chapter entry point
 ```
 

@@ -1,0 +1,15 @@
+# Local documentation references:
+# - /home/gtk/UNITREE/C1/docs/course-materials/实践1：宇树G1仿真环境（Isaac Sim_Lab_MuJoCo）搭建与基础功能验证.pdf
+# - /home/gtk/UNITREE_DEPS/unitree_mujoco/simulate/config.yaml
+#
+# Copied by scripts/sim2sim.sh only into the dedicated unitree_mujoco clone.
+robot: "g1"
+robot_scene: "scene_29dof.xml"
+domain_id: 0
+interface: "lo"
+use_joystick: 1
+joystick_type: "xbox"
+joystick_device: "/dev/input/js0"
+joystick_bits: 16
+print_scene_information: 1
+enable_elastic_band: 1
