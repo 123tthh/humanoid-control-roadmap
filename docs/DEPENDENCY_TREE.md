@@ -16,7 +16,9 @@ sources instead.
 │   ├── unitree_model/                # Unitree USD robot asset dataset
 │   ├── unitree_rl_lab/               # Unitree Isaac-Lab tasks and deployment source
 │   ├── unitree_sdk2/                 # SDK2 source plus ignored build/install output
-│   └── unitree_mujoco/               # MuJoCo bridge source plus ignored build output
+│   ├── unitree_mujoco/               # MuJoCo bridge source plus ignored build output
+│   ├── mujoco-3.3.6-source/          # MuJoCo source/build used for the C2 plugin
+│   └── mujoco_ray_caster/            # C2 terrain-raycaster plugin source
 ├── isaac-sim-5.1/                    # NVIDIA Isaac Sim workstation binary (separate)
 └── UNITREE_git_metadata/             # Detached nested-Git metadata backups (about 279 MiB)
     ├── C8_unitree_lab_amp.git-20260721/
@@ -38,6 +40,8 @@ repositories.
 | `unitree_sdk2/` | DDS transport and controller SDK used by C1 Sim2Sim | `21d0a3b2c46ee48c8fdf2783becb6be3beb0a59b` | [Unitree SDK2](https://github.com/unitreerobotics/unitree_sdk2) |
 | `unitree_mujoco/` | MuJoCo G1 simulation and SDK2 bridge used by C1 Sim2Sim | `ae6a8403e272733e9996ef59990880330496177f` | [Unitree MuJoCo](https://github.com/unitreerobotics/unitree_mujoco) |
 | `/home/gtk/.mujoco/mujoco-3.3.6/` | MuJoCo runtime required by `unitree_mujoco` | `3.3.6` | [MuJoCo 3.3.6 release](https://github.com/google-deepmind/mujoco/releases/tag/3.3.6) |
+| `mujoco-3.3.6-source/` | Source build used to compile the C2 raycaster ABI | `3.3.6` / `eacad44a1a67afe520b263c9b15dab82f62a10aa` | [MuJoCo source](https://github.com/google-deepmind/mujoco/tree/3.3.6) |
+| `mujoco_ray_caster/` | C2 MuJoCo height-scanner plugin | `c190b951b559b9f46157d559e5347c06aad20256` | [mujoco_ray_caster](https://github.com/Albusgive/mujoco_ray_caster) |
 | `/home/gtk/isaac-sim-5.1/` | NVIDIA simulator binary, not a source dependency | `5.1.0` | [NVIDIA Isaac Sim](https://developer.nvidia.com/isaac-sim) |
 
 The first three rows are the C1--C8 common Isaac Lab baseline. The SDK2,
@@ -72,6 +76,14 @@ git -C "${UNITREE_DEPS}/unitree_sdk2" checkout 21d0a3b2c46ee48c8fdf2783becb6be3b
 
 git clone https://github.com/unitreerobotics/unitree_mujoco.git "${UNITREE_DEPS}/unitree_mujoco"
 git -C "${UNITREE_DEPS}/unitree_mujoco" checkout ae6a8403e272733e9996ef59990880330496177f
+
+# C2 rough-terrain Sim2Sim: keep the Python package and plugin on MuJoCo 3.3.6.
+conda activate env_isaaclab
+python -m pip install mujoco==3.3.6
+git clone --branch 3.3.6 --depth 1 https://github.com/google-deepmind/mujoco.git \
+  "${UNITREE_DEPS}/mujoco-3.3.6-source"
+git clone --depth 1 https://github.com/Albusgive/mujoco_ray_caster.git \
+  "${UNITREE_DEPS}/mujoco_ray_caster"
 ```
 
 For Isaac Lab Conda setup and the remote/headless Docker option, use
@@ -89,11 +101,19 @@ UNITREE_DEPS/unitree_sdk2/install/
 UNITREE_DEPS/unitree_mujoco/simulate/build/
 UNITREE_DEPS/unitree_rl_lab/deploy/robots/g1_29dof/build-c1-sim2sim/
 UNITREE/C1/sim2sim/bin/g1_ctrl
+UNITREE_DEPS/mujoco-3.3.6-source/build/
+UNITREE_DEPS/mujoco-3.3.6-source/plugin/mujoco_ray_caster/lib/libsensor_raycaster.so
 ```
 
 The C1 `scripts/sim2sim.sh build` command recreates the last four outputs from
 the pinned sources. The final policy export is generated from the tracked C1
 `model_49999.pt` with `scripts/sim2sim.sh export`.
+
+For C2, link the plugin into `mujoco-3.3.6-source/plugin/mujoco_ray_caster`,
+add `add_subdirectory(plugin/mujoco_ray_caster)` after the built-in plugin
+entries in MuJoCo's top-level `CMakeLists.txt`, then configure and build the
+`sensor_raycaster` target. The exact C2 command and expected output are in
+[`C2/docs/ASSIGNMENT_REPORT.md`](../C2/docs/ASSIGNMENT_REPORT.md).
 
 ## Local state that must not be mistaken for upstream
 

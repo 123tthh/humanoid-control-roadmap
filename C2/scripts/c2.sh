@@ -5,6 +5,9 @@
 set -eo pipefail
 C2_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${C2_ROOT}/scripts/env.sh"
+# env.sh deliberately keeps its project-local variables private.  Restore the
+# root needed by this wrapper after sourcing it.
+C2_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${C2_ROOT}"
 
 command_name="${1:-help}"
@@ -14,7 +17,7 @@ fi
 
 case "${command_name}" in
     check)
-        python -c 'import c2_rough_terrain; import gymnasium as gym; assert "Unitree-G1-29dof-Velocity-Rough" in gym.registry; print("C2 rough-terrain task registration: OK")'
+        python "${C2_ROOT}/scripts/c2_static_check.py"
         ;;
     smoke)
         python "${C2_ROOT}/scripts/c2_entry.py" train --headless --num_envs 16 --max_iterations 1 "$@"
@@ -29,7 +32,7 @@ case "${command_name}" in
         printf '%s\n' \
             'Usage: scripts/c2.sh <command> [args]' \
             '' \
-            '  check  Validate isolated C2 task registration (no GPU simulation)' \
+            '  check  Validate the C2 assignment contract without starting Isaac Sim' \
             '  smoke  Run one headless C2 rough-terrain learning iteration' \
             '  train  Train C2 rough-terrain policy headlessly' \
             '  play   Launch C2 rough-terrain policy playback'

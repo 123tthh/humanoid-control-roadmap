@@ -1,4 +1,7 @@
-"""Configuration for the lightweight MuJoCo sim2sim runner."""
+# Local documentation references:
+# - /home/gtk/UNITREE/C2/docs/course-materials/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf
+# - /home/gtk/ai_docs/docs.isaacsim.omniverse.nvidia.com/5.1.0/robot_simulation/ext_isaacsim_robot_policy_example.md
+"""Configuration for the C2 MuJoCo raycaster Sim2Sim runner."""
 
 import os
 
@@ -14,7 +17,10 @@ TRAIN_RUN_DIR = os.path.join(SIM2SIM_DIR, "policy", "2026-06-12_10-36-30")
 # ROBOT_SCENE = os.path.join(ASSETS_DIR, "scene_flat.xml")
 ROBOT_SCENE = os.path.join(ASSETS_DIR, "scene_rough.xml")
 
-RAYCASTER_PLUGIN_LIBRARY = "/path/to/mujoco/build/lib/libsensor_raycaster.so"
+RAYCASTER_PLUGIN_LIBRARY = os.environ.get(
+    "C2_RAYCASTER_PLUGIN_LIBRARY",
+    "/home/gtk/UNITREE_DEPS/mujoco-3.3.6-source/plugin/mujoco_ray_caster/lib/libsensor_raycaster.so",
+)
 
 # POLICY_PATH = os.path.join(TRAIN_RUN_DIR, "model_14999.pt")
 POLICY_PATH = os.path.join(TRAIN_RUN_DIR, "exported", "policy.pt")

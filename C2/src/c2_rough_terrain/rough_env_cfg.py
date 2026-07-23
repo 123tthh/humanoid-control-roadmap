@@ -72,6 +72,10 @@ class C2G1RoughEnvCfg(RobotEnvCfg):
 
     def __post_init__(self):
         super().__post_init__()
+        # Keep the course-required 29-DoF joint-position action contract
+        # explicit even though it is inherited from RobotEnvCfg.
+        self.actions.JointPositionAction.scale = 0.25
+        self.actions.JointPositionAction.use_default_offset = True
         self.scene.terrain.terrain_generator = ROUGH_TERRAINS_CFG.replace(curriculum=True)
         self.scene.terrain.max_init_terrain_level = self.scene.terrain.terrain_generator.num_rows - 1
         self.scene.height_scanner.debug_vis = True

@@ -1,6 +1,6 @@
 # Rough Raycaster Sim2Sim
 
-训练完成后，需要使用 `unitree_rl_lab/sim2sim` 进行 MuJoCo sim2sim 验证。这个 sim2sim 不走 DDS 通信，而是直接在 Python 中加载 MuJoCo、读取 raycaster `sensordata`、拼接观测并运行 policy。
+训练完成后，使用本目录的 MuJoCo sim2sim 验证。它不走 DDS 通信，而是直接在 Python 中加载 MuJoCo、读取 raycaster `sensordata`、拼接观测并运行 policy。课程所需的 G1、粗糙地形和 raycaster 资产已在本目录中。
 
 视频演示链接：【【sim2sim】宇树机器人g1 粗糙地形带感知行走 mujoco】 https://www.bilibili.com/video/BV1n4jw6nExJ/
 
@@ -20,7 +20,7 @@ sim2sim 中的 height scanner 依赖 MuJoCo raycaster 插件：
 /path/to/mujoco/build/lib/libsensor_raycaster.so
 ```
 
-后续需要把这个实际路径填入 `sim2sim/config.py` 的 `RAYCASTER_PLUGIN_LIBRARY`。
+默认路径已配置为 `/home/gtk/UNITREE_DEPS/mujoco-3.3.6-source/plugin/mujoco_ray_caster/lib/libsensor_raycaster.so`。若依赖目录不同，以环境变量覆盖：`export C2_RAYCASTER_PLUGIN_LIBRARY=/actual/path/libsensor_raycaster.so`。
 
 ### 2 配置 sim2sim/config.py
 
@@ -69,14 +69,14 @@ DEPLOY_CONFIG = os.path.join(TRAIN_RUN_DIR, "params", "deploy.yaml")
 先运行无窗口快速检查：
 
 ```bash
-cd /path/to/unitree_rl_lab/sim2sim
-python sim2sim_raycaster.py --no-viewer --steps 20
+cd /home/gtk/UNITREE/C2
+./scripts/c2_sim2sim.sh --no-viewer --steps 20
 ```
 
 如果无窗口检查正常，再启动可视化键盘控制：
 
 ```bash
-python sim2sim_raycaster.py
+./scripts/c2_sim2sim.sh
 ```
 
 键盘控制：

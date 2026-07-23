@@ -9,8 +9,9 @@ cd /home/gtk/UNITREE/C2
 ./scripts/c2.sh check
 ./scripts/c2.sh smoke
 ./scripts/c2.sh train
+./scripts/c2_sim2sim.sh --no-viewer --steps 20
 ```
 
-`smoke` 与 `train` 会启动 Isaac Sim 并占用 GPU。C1 训练进行中时只可运行 `check`；待 C1 暂停或结束后再做仿真验证。
+`check` 是无 GPU 的文件级验收；`smoke` 与 `train` 会启动 Isaac Sim 并占用 GPU。C1 训练进行中时只可运行 `check`；待 C1 暂停或结束后再做仿真验证。
 
-粗糙地形环境已按 PDF 将 base-height 改为相对 height scanner 的高度、移除以世界坐标为基准的 foot-clearance，并加入双足 air-time 奖励与延迟非法接触终止。C2 Sim2Sim 还需要课程附件 `ch2_sim2sim.zip` 和 MuJoCo raycaster 插件；未提供这些资源前不会伪造验证结果。
+粗糙地形环境已按 PDF 将 base-height 改为相对 height scanner 的高度、移除以世界坐标为基准的 foot-clearance，并加入双足 air-time 奖励与延迟非法接触终止。完整的作业对照、策略产物说明和命令见 [`docs/ASSIGNMENT_REPORT.md`](docs/ASSIGNMENT_REPORT.md)。

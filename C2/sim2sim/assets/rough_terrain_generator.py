@@ -8,6 +8,8 @@ Edit DEFAULT_TERRAINS or pass a different output path on the command line.
 
 from __future__ import annotations
 
+# Local documentation references:
+# - /home/gtk/UNITREE/C2/docs/course-materials/实践2：设计感知与动作空间，实现宇树G1粗糙地形行走策略7.12版.pdf
 import argparse
 import math
 import random
